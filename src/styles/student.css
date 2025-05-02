@@ -1,0 +1,20 @@
+.dashboard-container {
+  position: relative;
+  padding: 20px;
+}
+
+.logout-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: darkred;
+}

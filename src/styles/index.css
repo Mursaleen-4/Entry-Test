@@ -1,0 +1,83 @@
+/* index.css */
+
+/* Reset some default styling for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body styling */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Set default style for links */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  a:hover {
+    color: #007bff;
+  }
+  
+  /* Ensuring the header/footer are styled well */
+  header, footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  /* Make sure the main content takes up the remaining space */
+  main {
+    flex: 1;
+  }
+  
+  /* Utility classes */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  /* You can also add a global style for form elements */
+  input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Add any other global styling here */
+  
