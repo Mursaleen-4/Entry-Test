@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestions, saveResult, checkIfTestSubmitted } from '../../services/dataService';
 import { getAuth } from 'firebase/auth';
@@ -53,6 +53,15 @@ const TestPage = () => {
     checkSubmission();
   }, [subject]);
 
+  const handleAutoSubmit = useCallback(async () => {
+    if (questions.every((q) => answers[q.id] !== undefined)) {
+      await submitTest();
+    } else {
+      alert('You did not complete all the questions before time ran out.');
+      navigate('/student/dashboard');
+    }
+  }, [questions, answers, submitTest, navigate]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
@@ -65,22 +74,13 @@ const TestPage = () => {
     }
 
     return () => clearInterval(interval);
-  }, [timer]);
+  }, [timer, handleAutoSubmit]);
 
   const handleAnswerChange = (questionId, selectedOption) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [questionId]: selectedOption,
     }));
-  };
-
-  const handleAutoSubmit = async () => {
-    if (questions.every((q) => answers[q.id] !== undefined)) {
-      await submitTest();
-    } else {
-      alert('You did not complete all the questions before time ran out.');
-      navigate('/student/dashboard');
-    }
   };
 
   const submitTest = async (e) => {
