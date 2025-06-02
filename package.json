@@ -2,6 +2,7 @@
   "name": "weproject",
   "version": "1.0.0",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "chart.js": "^4.4.7",
     "express": "^5.1.0",
