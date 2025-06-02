@@ -53,37 +53,7 @@ const TestPage = () => {
     checkSubmission();
   }, [subject]);
 
-  const handleAutoSubmit = useCallback(async () => {
-    if (questions.every((q) => answers[q.id] !== undefined)) {
-      await submitTest();
-    } else {
-      alert('You did not complete all the questions before time ran out.');
-      navigate('/student/dashboard');
-    }
-  }, [questions, answers, submitTest, navigate]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-
-    if (timer === 0) {
-      clearInterval(interval);
-      alert('Time is up! Submitting your test automatically.');
-      handleAutoSubmit();
-    }
-
-    return () => clearInterval(interval);
-  }, [timer, handleAutoSubmit]);
-
-  const handleAnswerChange = (questionId, selectedOption) => {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionId]: selectedOption,
-    }));
-  };
-
-  const submitTest = async (e) => {
+  const submitTest = useCallback(async (e) => {
     if (e) e.preventDefault();
 
     const allAnswered = questions.every((q) => answers[q.id] !== undefined);
@@ -123,6 +93,36 @@ const TestPage = () => {
       console.error('Error submitting test:', error);
       alert('Failed to submit test. Please try again.');
     }
+  }, [questions, answers, subject, navigate]);
+
+  const handleAutoSubmit = useCallback(async () => {
+    if (questions.every((q) => answers[q.id] !== undefined)) {
+      await submitTest();
+    } else {
+      alert('You did not complete all the questions before time ran out.');
+      navigate('/student/dashboard');
+    }
+  }, [questions, answers, submitTest, navigate]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    if (timer === 0) {
+      clearInterval(interval);
+      alert('Time is up! Submitting your test automatically.');
+      handleAutoSubmit();
+    }
+
+    return () => clearInterval(interval);
+  }, [timer, handleAutoSubmit]);
+
+  const handleAnswerChange = (questionId, selectedOption) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: selectedOption,
+    }));
   };
 
   const nextQuestion = () => {
