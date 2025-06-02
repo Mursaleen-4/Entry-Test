@@ -11,24 +11,43 @@ const TestPage = () => {
   const [answers, setAnswers] = useState({});
   const [timer, setTimer] = useState(600);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const fetchedQuestions = await getQuestions(subject);
-      const questionsWithIds = fetchedQuestions.map((q, index) => ({ ...q, id: index }));
-      setQuestions(questionsWithIds);
+      try {
+        setLoading(true);
+        const fetchedQuestions = await getQuestions(subject);
+        if (!fetchedQuestions || fetchedQuestions.length === 0) {
+          setError('No questions found for this subject');
+          return;
+        }
+        const questionsWithIds = fetchedQuestions.map((q, index) => ({ ...q, id: index }));
+        setQuestions(questionsWithIds);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+        setError('Failed to load questions. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     };
     fetchQuestions();
   }, [subject]);
 
   useEffect(() => {
     const checkSubmission = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (user) {
-        const userId = user.uid;
-        const submitted = await checkIfTestSubmitted(userId, subject);
-        setIsSubmitted(submitted);
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          const submitted = await checkIfTestSubmitted(userId, subject);
+          setIsSubmitted(submitted);
+        }
+      } catch (error) {
+        console.error('Error checking submission:', error);
       }
     };
     checkSubmission();
@@ -102,40 +121,126 @@ const TestPage = () => {
       navigate('/student/dashboard');
     } catch (error) {
       console.error('Error submitting test:', error);
+      alert('Failed to submit test. Please try again.');
     }
   };
+
+  const nextQuestion = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    }
+  };
+
+  const prevQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(prev => prev - 1);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="test-container">
+        <h2>Loading test...</h2>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="test-container">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <button onClick={() => navigate('/student/dashboard')}>Return to Dashboard</button>
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (
       <div className="test-container">
         <h2>You have already submitted this test.</h2>
+        <button onClick={() => navigate('/student/dashboard')}>Return to Dashboard</button>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="test-container">
+        <h2>No questions available for this test.</h2>
+        <button onClick={() => navigate('/student/dashboard')}>Return to Dashboard</button>
       </div>
     );
   }
 
   return (
     <div className="test-container">
-      <h2>Test: {subject}</h2>
-      <div>Time remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}</div>
-      <form onSubmit={submitTest}>
-        {questions.map((question) => (
-          <div key={question.id} className="question-container">
-            <p>{question.question}</p>
-            {question.options.map((option, index) => (
-              <label key={`${question.id}-${index}`} className="option-label">
-                <input
-                  type="radio"
-                  name={`question-${question.id}`}
-                  value={index}
-                  checked={answers[question.id] === index}
-                  onChange={() => handleAnswerChange(question.id, index)}
-                />
-                {option}
-              </label>
-            ))}
-          </div>
+      <div className="test-header">
+        <h2>{subject} Test</h2>
+        <div className="test-timer">
+          Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
+        </div>
+      </div>
+
+      <div className="progress-indicator">
+        {questions.map((_, index) => (
+          <div
+            key={index}
+            className={`progress-dot ${index === currentQuestion ? 'active' : ''} ${
+              answers[index] !== undefined ? 'completed' : ''
+            }`}
+          />
         ))}
-        <button type="submit">Submit Test</button>
+      </div>
+
+      <form onSubmit={submitTest}>
+        {questions.length > 0 && (
+          <div className="question-container">
+            <p className="question-text">
+              {currentQuestion + 1}. {questions[currentQuestion].question}
+            </p>
+            <div className="options-container">
+              {questions[currentQuestion].options.map((option, index) => (
+                <button
+                  key={`${currentQuestion}-${index}`}
+                  type="button"
+                  className={`option-button ${
+                    answers[questions[currentQuestion].id] === index ? 'selected' : ''
+                  }`}
+                  onClick={() => handleAnswerChange(questions[currentQuestion].id, index)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="test-navigation">
+          <button
+            type="button"
+            className="nav-button"
+            onClick={prevQuestion}
+            disabled={currentQuestion === 0}
+          >
+            Previous
+          </button>
+          
+          {currentQuestion === questions.length - 1 ? (
+            <button type="submit" className="nav-button">
+              Submit Test
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="nav-button"
+              onClick={nextQuestion}
+              disabled={currentQuestion === questions.length - 1}
+            >
+              Next
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );

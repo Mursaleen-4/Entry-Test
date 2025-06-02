@@ -1,5 +1,8 @@
 /* index.css */
 
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Reset some default styling for consistency */
 * {
     margin: 0;
@@ -9,9 +12,9 @@
   
   /* Body styling */
   body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    color: #2d3436;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -21,24 +24,27 @@
   /* Set default style for links */
   a {
     text-decoration: none;
-    color: inherit;
+    color: #0984e3;
+    transition: color 0.3s ease;
   }
   
   a:hover {
-    color: #007bff;
+    color: #74b9ff;
   }
   
   /* Ensuring the header/footer are styled well */
   header, footer {
-    background-color: #343a40;
+    background: linear-gradient(135deg, #2d3436 0%, #000000 100%);
     color: #fff;
     text-align: center;
-    padding: 10px 0;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
   /* Make sure the main content takes up the remaining space */
   main {
     flex: 1;
+    padding: 2rem 0;
   }
   
   /* Utility classes */
@@ -59,24 +65,79 @@
     display: none;
   }
   
-  /* You can also add a global style for form elements */
+  /* Modern form elements styling */
   input, button, select, textarea {
-    font-family: inherit;
-    font-size: inherit;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 2px solid #dfe6e9;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #0984e3;
+    box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
   }
   
   button {
     cursor: pointer;
-    background-color: #007bff;
+    background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
     color: white;
+    font-weight: 500;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(9, 132, 227, 0.2);
+  }
+  
+  button:active {
+    transform: translateY(0);
+  }
+  
+  /* Card styling */
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #e74c3c;
+    background-color: #fde8e8;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 0.9rem;
+  }
+  
+  /* Success message styling */
+  .success-message {
+    color: #27ae60;
+    background-color: #e8f8e8;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 0.9rem;
   }
   
   /* Add any other global styling here */
