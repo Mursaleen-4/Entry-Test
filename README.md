@@ -2,7 +2,8 @@
 
 ## Overview
 WEProject is a web application designed for managing student interactions, including login, signup, and test-taking functionalities. The application features an admin interface for managing users and data.
-
+## Live demo
+entry-test-chi.vercel.app
 ## Project Structure
 ```
 WEProject/
